@@ -39,6 +39,7 @@ public class Main {
                     } catch (NumberFormatException e) {
 
                         //if there is a issue with the formatting then that line will be skipped
+                        //might add further functions to reformat lines properly
 
                         }
 
@@ -59,11 +60,16 @@ public class Main {
             e.printStackTrace();
         }
 
+        //testing to see if method will print a subset of binary tree
+        movieTree.subSet(movieTree.getRoot(),"Toy Story  ".hashCode(), "Grumpier Old Men ".hashCode());
+
     }
 
 }
 
 class Node{
+
+    //value being stored in node is of type Movie, accessor methods are used to pull variables
     Movie val;
     Node left, right;
 
@@ -77,7 +83,7 @@ class Node{
 class MovieTree{
 
     private int size=0;
-    static private Node root;
+    private Node root;
 
     MovieTree(Movie newMovie){
         root=new Node(newMovie);
@@ -92,6 +98,7 @@ class MovieTree{
     }
 
     boolean add(Movie newMovie){
+        //if root is null then tree is empty and root should be initalized to new value
         if(this.root==null){
             this.root= new Node(newMovie);
             size++;
@@ -100,6 +107,9 @@ class MovieTree{
         Node parent=null;
         Node current=root;
 
+        //while loop going through tree finding next spot to insert node
+        //checks to see if val of new node is smaller then root/current node. if yes, it moves to left child and checks again
+        //keeps checking for values of children vs new node value, once it reaches a null value it will create and new node and add it to the tree
         while(current!=null){
             if(newMovie.getTitle().compareToIgnoreCase(current.val.getTitle())<0){
                 parent=current;
@@ -124,10 +134,35 @@ class MovieTree{
 
     public Node getRoot(){return root;}
 
+    //this code is meant to print out all values of between two keys but for some reason i cannot get it to work
+    void subSet(Node node, int start, int end) {
+
+        if (node == null) {
+            return;
+        }
+
+        if (start < node.val.getTitleHash()) {
+            subSet(node.left, start, end);
+        }
+
+        if (start <= node.val.getTitleHash() && end >= node.val.getTitleHash()) {
+            System.out.print(node.val.getTitle() + " " + node.val.getReleaseYear());
+        }
+
+        if (end > node.val.getTitleHash()) {
+            subSet(node.right, start, end);
+        }
+    }
+
+    //method to check if a value exists in the tree
     public boolean contains(String movie){
+        //start with the root node
         Node current=root;
 
+        //if root node is null then tree is empty and value cant exist in tree
         while (current != null){
+
+            //if the movie being looked for has a title smaller then the current node, program looks at left child. if bigger then program looks at right child
             if(movie.compareToIgnoreCase(current.val.getTitle())<0){
                 current=current.left;;
             }else if(movie.compareToIgnoreCase(current.val.getTitle())>0){
@@ -136,18 +171,19 @@ class MovieTree{
                 return true;
             }
         }
+
+        //if while loop gets to a null child then value doesnt exists and method returns false
         return false;
     }
 }
 
 
-
 class Movie implements Comparable<Movie>{
     private int movieID;
     private String title;
-    private int titleHash;
+    private int titleHash; //making title into a hashcode to make comparing titles easier in the future
     private int releaseYear;
-    private ArrayList<String> genres = new ArrayList<String>();
+    private ArrayList<String> genres = new ArrayList<String>(); //storing genres in a arraylist. easier to add genres without having to adjust array size
 
     public Movie(int movieID, String title,int releaseYear, ArrayList<String> genres){
         this.title=title;
