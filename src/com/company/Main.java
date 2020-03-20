@@ -11,7 +11,7 @@ public class Main {
         MovieTree movieTree=new MovieTree();
 
         try{
-            BufferedReader br = new BufferedReader(new FileReader(new File("/Users/xhuljantinaj/Desktop/ml-latest-small/movies.csv")));
+            BufferedReader br = new BufferedReader(new FileReader(new File("ml-latest-small/movies.csv")));
 
             String line;
 
@@ -135,20 +135,25 @@ class MovieTree{
     public Node getRoot(){return root;}
 
     //this code is meant to print out all values of between two keys but for some reason i cannot get it to work
+    //start and end are hashcodes of movie titles to tell the program where to start and end looking for movie names
+    //Node node is a refernce to root value of tree
     void subSet(Node node, int start, int end) {
 
         if (node == null) {
             return;
         }
 
+        //checks to see if start is bigger than current value and goes left if it is
         if (start < node.val.getTitleHash()) {
             subSet(node.left, start, end);
         }
 
+        //checks to see if the current cal falls inbetween the start and end paramter and if it does it prints it
         if (start <= node.val.getTitleHash() && end >= node.val.getTitleHash()) {
             System.out.print(node.val.getTitle() + " " + node.val.getReleaseYear());
         }
 
+        //if the current value is smaller then the end the program goes right
         if (end > node.val.getTitleHash()) {
             subSet(node.right, start, end);
         }
